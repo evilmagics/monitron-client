@@ -1,0 +1,153 @@
+{
+	"info": {
+		"_postman_id": "9d186282-da2e-4d3f-af8e-0599c8f05007",
+		"name": "psuitls-client",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33796031",
+		"_collection_link": "https://demon-prayers.postman.co/workspace/evilmagic~0bf22ce7-c561-432c-a935-f77186f3aff3/collection/33796031-9d186282-da2e-4d3f-af8e-0599c8f05007?action=share&source=collection_link&creator=33796031"
+	},
+	"item": [
+		{
+			"name": "All Stats",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/stats",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"stats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Networks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/stats/network",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"stats",
+						"network"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Disk",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/stats/disk",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"stats",
+						"disk"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CPU",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/stats/cpu",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"stats",
+						"cpu"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Memory",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/stats/memory",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"stats",
+						"memory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Host",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/stats/host",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"stats",
+						"host"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://192.168.216.32:9898",
+			"type": "string"
+		}
+	]
+}
