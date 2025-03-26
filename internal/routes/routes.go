@@ -21,18 +21,20 @@ func Routes() *fiber.App {
 	{
 		stat.Get("/", stats.HandleAPI)
 		stat.Get("/cpu", stats.HandleCPU)
+		stat.Get("/cpu/info", stats.HandleCPU)
 		stat.Get("/host", stats.HandleHost)
 		stat.Get("/disk", stats.HandleDisk)
+		stat.Get("/disk/partition", stats.HandleDisk)
 		stat.Get("/memory", stats.HandleMemory)
 		stat.Get("/network", stats.HandleNetwork)
 	}
 
 	ws := app.Group("/ws/stats")
 	{
-		ws.Get("/cpu", HandleCPUWS())
-		ws.Get("/memory", HandleMemoryWS())
-		ws.Get("/disk", HandleDiskWS())
-		ws.Get("/network", HandleNetworkWS())
+		ws.Get("/cpu", stats.HandleCPUWS())
+		ws.Get("/memory", stats.HandleMemoryWS())
+		ws.Get("/disk", stats.HandleDiskWS())
+		ws.Get("/network", stats.HandleNetworkWS())
 	}
 	app.Use(HandleNotFound())
 	return app

@@ -1,25 +1,32 @@
 # Psutils Client
 
+## Features
+- Supported secure HTTPS protocols
+- Supported websocket protocols usage stats
+- Implement in-memory cache more efficiently for performance
+- Lightweight and small resources but better performance
+
 ## Build
 
 ### Linux
 ```bash
-    GOOS=linux go build -o ./build/monitron-client -ldflags="-X main.AppVersion={version}" ./cmd/main.go
+    GOOS=linux go build -o ./build/monitron-client -ldflags="-s -X main.AppVersion={version}" ./cmd/main.go
 ```
 
 ### Windows
 ```bash
-    GOOS=windows go build -o ./build/monitron-client.exe -ldflags="-X main.AppVersion={version}" ./cmd/main.go
+    GOOS=windows go build -o ./build/monitron-client.exe -ldflags="-s -X main.AppVersion={version}" ./cmd/main.go
 ```
 
 ## Dependencies
 - [Fiber](https://gofiber.io/)
 - [NutsDB](https://github.com/nutsdb/nutsdb)
-- [GoCron](https://github.com/go-co-op/gocron)
-- [GoCache](https://github.com/eko/gocache)
+- [GoCache](github.com/patrickmn/go-cache)
 - [GoPsUtils](https://github.com/shirou/gopsutil)
 
 ## Next Feature
+- Split disk partition usage into separate cache and api
+- Split cpu usage and information into separate api and remove the information from cache
 - Secure connection using JWT and Client Authentication
 - Default authentication
 - Scheduled stats and save into NutsDB
