@@ -13,17 +13,17 @@ type WebSocketParams struct {
 	Interval *time.Duration `params:"interval"`
 }
 
-func HandleCPUWS(interval ...time.Duration) fiber.Handler {
-	return HandleStatWS(GetCachedCPU, interval...)
+func HandleCPUUsageWS(interval ...time.Duration) fiber.Handler {
+	return HandleStatWS(GetCachedCPUUsage, interval...)
 }
-func HandleMemoryWS(interval ...time.Duration) fiber.Handler {
-	return HandleStatWS(GetCachedMemory, interval...)
+func HandleMemoryUsageWS(interval ...time.Duration) fiber.Handler {
+	return HandleStatWS(GetCachedMemoryUsage, interval...)
 }
-func HandleDiskWS(interval ...time.Duration) fiber.Handler {
-	return HandleStatWS(GetCachedDisk, interval...)
+func HandleDiskUsageWS(interval ...time.Duration) fiber.Handler {
+	return HandleStatWS(GetCachedDiskUsage, interval...)
 }
-func HandleNetworkWS(interval ...time.Duration) fiber.Handler {
-	return HandleStatWS(GetCachedNetwork, interval...)
+func HandleNetworkUsageWS(interval ...time.Duration) fiber.Handler {
+	return HandleStatWS(GetCachedNetworkUsage, interval...)
 }
 
 func HandleStatWS[T any](job GetCacheFunc[T], interval ...time.Duration) fiber.Handler {
@@ -36,6 +36,7 @@ func HandleStatWS[T any](job GetCacheFunc[T], interval ...time.Duration) fiber.H
 
 		ticker := time.NewTicker(interval[0])
 		defer ticker.Stop()
+		defer c.Close()
 
 		for range ticker.C {
 			stat := job()
@@ -46,6 +47,8 @@ func HandleStatWS[T any](job GetCacheFunc[T], interval ...time.Duration) fiber.H
 
 			err := c.WriteMessage(websocket.TextMessage, data)
 			if err != nil {
+				ticker.Stop()
+				c.Close()
 				break
 			}
 		}

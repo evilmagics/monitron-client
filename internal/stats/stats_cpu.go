@@ -5,6 +5,16 @@ import (
 	"github.com/shirou/gopsutil/v4/cpu"
 )
 
+type CPUStat struct {
+	Info  CPUInfo  `json:"info"`
+	Usage CPUUsage `json:"usage"`
+}
+
+func (s CPUStat) String() string {
+	str, _ := json.Marshal(s)
+	return string(str)
+}
+
 type CPUInfo struct {
 	VendorID      string  `json:"vendorId"`
 	Family        string  `json:"family"`
@@ -42,58 +52,65 @@ func (s CPUUsage) String() string {
 	return string(str)
 }
 
-type CPUStat struct {
-	Info  CPUInfo  `json:"info"`
-	Usage CPUUsage `json:"usage"`
-}
-
-func (s CPUStat) String() string {
-	str, _ := json.Marshal(s)
-	return string(str)
-}
-
 func StatCPU() (CPUStat, error) {
-	info, err := cpu.Info()
-	if err != nil || len(info) == 0 {
+	info, err := StatCPUInfo()
+	if err != nil {
 		return CPUStat{}, err
 	}
 
+	usage, err := StatCPUUsage()
+	if err != nil {
+		return CPUStat{}, err
+	}
+
+	return CPUStat{
+		Info:  info,
+		Usage: usage,
+	}, nil
+}
+
+func StatCPUInfo() (CPUInfo, error) {
+	info, err := cpu.Info()
+	if err != nil || len(info) == 0 {
+		return CPUInfo{}, err
+	}
+
+	return CPUInfo{
+		VendorID:      info[0].VendorID,
+		Family:        info[0].Family,
+		Model:         info[0].Model,
+		PhysicalID:    info[0].PhysicalID,
+		ModelName:     info[0].ModelName,
+		Cores:         info[0].Cores,
+		Frequency:     info[0].Mhz / 1000.0,
+		CacheSize:     info[0].CacheSize,
+		FrequencyUnit: "GHz",
+	}, nil
+}
+
+func StatCPUUsage() (CPUUsage, error) {
 	usage, err := cpu.Times(false)
 	if err != nil || len(usage) == 0 {
-		return CPUStat{}, err
+		return CPUUsage{}, err
 	}
 
 	percent, err := cpu.Percent(0, false)
 	if err != nil || len(percent) == 0 {
-		return CPUStat{}, err
+		return CPUUsage{}, err
 	}
 
-	stats := CPUStat{
-		Info: CPUInfo{
-			VendorID:      info[0].VendorID,
-			Family:        info[0].Family,
-			Model:         info[0].Model,
-			PhysicalID:    info[0].PhysicalID,
-			ModelName:     info[0].ModelName,
-			Cores:         info[0].Cores,
-			Frequency:     info[0].Mhz / 1000.0,
-			CacheSize:     info[0].CacheSize,
-			FrequencyUnit: "GHz",
-		},
-		Usage: CPUUsage{
-			User:    usage[0].User,
-			System:  usage[0].System,
-			Idle:    usage[0].Idle,
-			IOWait:  usage[0].Iowait,
-			Nice:    usage[0].Nice,
-			Irq:     usage[0].Irq,
-			SoftIrq: usage[0].Softirq,
-			Steal:   usage[0].Steal,
-			Guest:   usage[0].Guest,
-			TNice:   usage[0].Nice,
-			Total:   usage[0].Total(),
-			Percent: percent[0],
-		},
-	}
-	return stats, nil
+	return CPUUsage{
+		User:    usage[0].User,
+		System:  usage[0].System,
+		Idle:    usage[0].Idle,
+		IOWait:  usage[0].Iowait,
+		Nice:    usage[0].Nice,
+		Irq:     usage[0].Irq,
+		SoftIrq: usage[0].Softirq,
+		Steal:   usage[0].Steal,
+		Guest:   usage[0].Guest,
+		TNice:   usage[0].Nice,
+		Total:   usage[0].Total(),
+		Percent: percent[0],
+	}, nil
 }

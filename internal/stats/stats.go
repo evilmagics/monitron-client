@@ -24,6 +24,7 @@ func AllStats() (*Stats, error) {
 	var err error
 	stats := new(Stats)
 
+	stats.Host, err = StatHost()
 	stats.CPU, err = StatCPU()
 	stats.Memory, err = StatMemory()
 	stats.Disk, err = StatDisk()

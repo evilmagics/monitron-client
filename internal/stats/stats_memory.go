@@ -6,6 +6,9 @@ import (
 )
 
 type MemoryStat struct {
+	Usage MemoryUsage
+}
+type MemoryUsage struct {
 	Available   uint64  `json:"available"`
 	Used        uint64  `json:"used"`
 	Free        uint64  `json:"free"`
@@ -16,18 +19,27 @@ type MemoryStat struct {
 	UsedPercent float64 `json:"usedPercent"`
 }
 
-func (s MemoryStat) String() string {
+func (s MemoryUsage) String() string {
 	str, _ := json.Marshal(s)
 	return string(str)
 }
 
 func StatMemory() (MemoryStat, error) {
-	v, err := mem.VirtualMemory()
-	if err != nil || v == nil {
+	usage, err := StatMemoryUsage()
+	if err != nil {
 		return MemoryStat{}, err
 	}
 
-	return MemoryStat{
+	return MemoryStat{Usage: usage}, nil
+}
+
+func StatMemoryUsage() (MemoryUsage, error) {
+	v, err := mem.VirtualMemory()
+	if err != nil || v == nil {
+		return MemoryUsage{}, err
+	}
+
+	return MemoryUsage{
 		Available:   v.Available,
 		Used:        v.Used,
 		Free:        v.Free,

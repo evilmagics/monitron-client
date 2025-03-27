@@ -8,10 +8,20 @@ import (
 )
 
 var (
-	HandleMemory  = handleCachedStatApi(GetCachedMemory)
-	HandleCPU     = handleCachedStatApi(GetCachedCPU)
-	HandleDisk    = handleCachedStatApi(GetCachedDisk)
-	HandleNetwork = handleCachedStatApi(GetCachedNetwork)
+	HandleStats          = handleStatApi(AllStats)
+	HandleHost           = handleStatApi(StatHost)
+	HandleCPU            = handleStatApi(StatCPU)
+	HandleCPUInfo        = handleStatApi(StatCPUInfo)
+	HandleMemory         = handleStatApi(StatMemory)
+	HandleDisk           = handleStatApi(StatDisk)
+	HandleDiskPartitions = handleStatApi(StatDiskPartitions)
+)
+
+var (
+	HandleCPUUsage     = handleCachedStatApi(GetCachedCPUUsage)
+	HandleMemoryUsage  = handleCachedStatApi(GetCachedMemoryUsage)
+	HandleNetworkUsage = handleCachedStatApi(GetCachedNetworkUsage)
+	HandleDiskUsage    = handleCachedStatApi(GetCachedDiskUsage)
 )
 
 func StatJob[T any](wg *sync.WaitGroup, job StatFunc[T], dst *T) {
@@ -40,7 +50,7 @@ func HandleAPI(c *fiber.Ctx) error {
 func handleCachedStatApi[T any](fn GetCacheFunc[T]) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		stat := fn()
-		if fn == nil {
+		if stat == nil {
 			stat = new(T)
 		}
 		c.Status(fiber.StatusOK).JSON(utils.SuccessResponse(stat))
@@ -48,11 +58,13 @@ func handleCachedStatApi[T any](fn GetCacheFunc[T]) fiber.Handler {
 	}
 }
 
-func HandleHost(c *fiber.Ctx) error {
-	stat, err := StatHost()
-	if err != nil {
-		return err
+func handleStatApi[T any](fn StatFunc[T]) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		stat, err := fn()
+		if err != nil {
+			return err
+		}
+		c.Status(fiber.StatusOK).JSON(utils.SuccessResponse(stat))
+		return nil
 	}
-	c.Status(fiber.StatusOK).JSON(utils.SuccessResponse(stat))
-	return nil
 }

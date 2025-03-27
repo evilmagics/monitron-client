@@ -5,6 +5,9 @@ import (
 )
 
 type NetworkStat struct {
+	Usage NetworkUsage `json:"usage"`
+}
+type NetworkUsage struct {
 	BytesSent       uint64 `json:"bytesSent"`
 	BytesReceived   uint64 `json:"bytesReceived"`
 	PacketsSent     uint64 `json:"packetsSent"`
@@ -18,12 +21,21 @@ type NetworkStat struct {
 }
 
 func StatNetwork() (NetworkStat, error) {
-	counters, err := net.IOCounters(false)
-	if err != nil || len(counters) == 0 {
+	usage, err := StatNetworkUsage()
+	if err != nil {
 		return NetworkStat{}, err
 	}
 
-	return NetworkStat{
+	return NetworkStat{Usage: usage}, nil
+}
+
+func StatNetworkUsage() (NetworkUsage, error) {
+	counters, err := net.IOCounters(false)
+	if err != nil || len(counters) == 0 {
+		return NetworkUsage{}, err
+	}
+
+	return NetworkUsage{
 		BytesSent:       counters[0].BytesSent,
 		BytesReceived:   counters[0].BytesRecv,
 		PacketsSent:     counters[0].PacketsSent,

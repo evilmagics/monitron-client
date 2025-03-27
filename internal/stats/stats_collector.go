@@ -17,10 +17,10 @@ func StartCollectStats(interval ...time.Duration) {
 	}
 
 	// Cache first
-	CacheAllStats(exp)
+	CacheUsageStats(exp)
 
 	for range Ticker().C {
-		CacheAllStats(exp)
+		CacheUsageStats(exp)
 	}
 }
 

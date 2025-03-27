@@ -5,43 +5,41 @@ import (
 	"time"
 )
 
-func GetCachedAllStats() *Stats {
-	return getCached[Stats](CacheKeyStats)
+func GetCachedCPUUsage() *CPUUsage {
+	return getCached[CPUUsage](CacheKeyCPU)
+
 }
-func GetCachedCPU() *CPUStat {
-	return getCached[CPUStat](CacheKeyCPU)
+func GetCachedMemoryUsage() *MemoryUsage {
+	return getCached[MemoryUsage](CacheKeyMemory)
 }
-func GetCachedMemory() *MemoryStat {
-	return getCached[MemoryStat](CacheKeyMemory)
+func GetCachedDiskUsage() *DiskUsage {
+	return getCached[DiskUsage](CacheKeyDisk)
 }
-func GetCachedDisk() *DiskStat {
-	return getCached[DiskStat](CacheKeyDisk)
-}
-func GetCachedNetwork() *NetworkStat {
-	return getCached[NetworkStat](CacheKeyNetwork)
+func GetCachedNetworkUsage() *NetworkUsage {
+	return getCached[NetworkUsage](CacheKeyNetwork)
 }
 
-func CacheAllStats(exp ...time.Duration) {
-	CacheCPU(exp...)
-	CacheMemory(exp...)
-	CacheDisk(exp...)
-	CacheNetwork(exp...)
+func CacheUsageStats(exp ...time.Duration) {
+	CacheCPUUsage(exp...)
+	CacheMemoryUsage(exp...)
+	CacheDiskUsage(exp...)
+	CacheNetworkUsage(exp...)
 }
 
-func CacheCPU(exp ...time.Duration) {
-	caching(CacheKeyCPU, StatCPU, exp...)
+func CacheCPUUsage(exp ...time.Duration) {
+	caching(CacheKeyCPU, StatCPUUsage, exp...)
 }
 
-func CacheMemory(exp ...time.Duration) {
-	caching(CacheKeyMemory, StatMemory, exp...)
+func CacheMemoryUsage(exp ...time.Duration) {
+	caching(CacheKeyMemory, StatMemoryUsage, exp...)
 }
 
-func CacheDisk(exp ...time.Duration) {
-	caching(CacheKeyDisk, StatDisk, exp...)
+func CacheDiskUsage(exp ...time.Duration) {
+	caching(CacheKeyDisk, StatDiskUsage, exp...)
 }
 
-func CacheNetwork(exp ...time.Duration) {
-	caching(CacheKeyNetwork, StatNetwork, exp...)
+func CacheNetworkUsage(exp ...time.Duration) {
+	caching(CacheKeyNetwork, StatNetworkUsage, exp...)
 }
 
 func caching[T any](key string, statFn StatFunc[T], exp ...time.Duration) {

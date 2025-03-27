@@ -47,5 +47,5 @@ func onShutdown(app *fiber.App) {
 	database.Cache().Flush()
 	stats.StopCollectStats()
 
-	fmt.Println("Fiber was successful shutdown.")
+	fmt.Println("Application was successful shutdown.")
 }
